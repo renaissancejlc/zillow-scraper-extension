@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Zillow Scraper",
+  "version": "1.0",
+  "description": "Scrape Zillow listings and save to your rental tool",
+  "permissions": ["scripting", "activeTab", "storage"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.zillow.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
