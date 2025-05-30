@@ -2,10 +2,12 @@
   "manifest_version": 3,
   "name": "Zillow Scraper",
   "version": "1.0",
-  "description": "Scrape Zillow listings and save to your rental tool",
-  "permissions": ["scripting", "activeTab", "storage"],
+  "description": "Scrape Zillow listings and save them to your cash flow app.",
+  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "host_permissions": ["*://www.zillow.com/*"],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "Zillow Scraper"
   },
   "background": {
     "service_worker": "background.js"

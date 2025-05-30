@@ -13,6 +13,17 @@ document.getElementById("scrapeBtn").addEventListener("click", () => {
       }
 
       const parsedPrice = parseFloat(data.price.replace(/[^\d\.]/g, '')) || 0;
+      const zipMatch = data.address.match(/\b\d{5}\b/);
+      const zipCode = zipMatch ? zipMatch[0] : '';
+      const cityMatch = data.address.split(',')[1]?.trim().toLowerCase().replace(/\s+/g, '_') || 'san_diego';
+      const hoaText = document.querySelector("span:contains('HOA fee')")?.nextSibling?.textContent || '';
+      const parsedHOA = parseFloat(hoaText.replace(/[^\d\.]/g, '')) || 100;
+      // Additional fields from Zillow
+      const beds = document.querySelector("[data-testid='bed-bath-beyond'] span")?.textContent?.match(/(\d+\.?\d*)\s*bd/)?.[1] || '';
+      const baths = document.querySelector("[data-testid='bed-bath-beyond'] span")?.textContent?.match(/(\d+\.?\d*)\s*ba/)?.[1] || '';
+      const sqft = document.querySelector("[data-testid='bed-bath-beyond'] span")?.textContent?.match(/([\d,]+)\s*sqft/)?.[1]?.replace(/,/g, '') || '';
+      const lotSize = Array.from(document.querySelectorAll("[data-testid='key-features'] li")).find(el => el.textContent?.includes("Lot"))?.textContent?.match(/([\d,]+)\s*sqft/)?.[1]?.replace(/,/g, '') || '';
+      const homeType = Array.from(document.querySelectorAll("[data-testid='key-features'] li")).find(el => el.textContent?.toLowerCase().includes("type"))?.textContent?.split(':')[1]?.trim() || '';
       const downPayment = parsedPrice * 0.2;
       const closingCosts = parsedPrice * 0.03;
       const propertyTax = parsedPrice * 0.01;
@@ -26,12 +37,17 @@ document.getElementById("scrapeBtn").addEventListener("click", () => {
         property_tax: propertyTax,
         insurance: 1200,
         monthly_rent: 2000,
-        hoa: 100,
+        hoa: parsedHOA,
         vacancy_rate: 0.08,
         repairs: 100,
-        location: 'san_diego',
-        zip_code: '',
+        location: cityMatch,
+        zip_code: zipCode,
         zillow_link: data.url,
+        bedrooms: beds,
+        bathrooms: baths,
+        square_footage: sqft,
+        lot_size: lotSize,
+        home_type: homeType,
         rehab_rating: '',
         crime_rating: '',
         population_growth: '',
